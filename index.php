@@ -18,18 +18,15 @@
             templates::getFonts();
         ?>
         <link rel="stylesheet" href="css/style.css">
-        <script src="js/ajax.js" type="text/javascript"></script>
+        <script src="js/scripts.js" type="text/javascript"></script>
     </head>
     <body>
-        <?php templates::getHeader(); ?>
-        
-        <section id="content">
-            <?php templates::getSudoku(); ?>
-        </section>
-
         <?php 
+            templates::getHeader();
+            templates::getSudoku();
             templates::getButtons();
             templates::getFooter();
+            templates::getNotificationWindow();
         ?>
     </body>
 </html>

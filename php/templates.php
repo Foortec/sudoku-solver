@@ -28,7 +28,7 @@ class Templates
         echo '
             <header id="site-header">
                 <h1 id="site-title">Sudoku solver</h1>
-                <p id="site-version">0.1.0 test version</p>
+                <p id="site-version">0.2.0 test version</p>
             </header>
         ';
     }
@@ -42,9 +42,21 @@ class Templates
     {
         echo '
             <section id="buttons">
-                <input id="solve" type="button" value="Solve"/>
-                <input id="erase" type="button" value="Erase"/>
+                <input id="solve" type="button" value="Solve" onclick="solveSudoku();"/>
+                <input id="erase" type="button" value="Erase" onclick="eraseSudoku();"/>
             </section>
+        ';
+    }
+
+    static public function getNotificationWindow() : void
+    {
+        echo '
+            <div id="notification">
+                <span style="float: right; padding: 10px; cursor: pointer;" onclick="document.getElementById(\'notification\').style.display = \'none\';">Close</span>
+                <h3>Notification</h3>
+                <hr/>
+                <p id="notification-message"></p>
+            </div>
         ';
     }
 

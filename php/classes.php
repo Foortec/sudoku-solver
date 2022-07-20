@@ -3,7 +3,7 @@ class Sudoku
 {
     static public function display() : void
     {
-        echo '<section id="sudoku">';
+        echo '<section id="main"><section id="sudoku">';
         for($i=0; $i<9; ++$i)
         {
             echo '<section class="sudoku-chunk">';
@@ -11,6 +11,6 @@ class Sudoku
                 echo '<input id="coords' . $i, $j . '" class="sudoku-input" type="number" oninput="if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);" maxlength="1"/>';
             echo '</section>';
         }
-        echo '</section>';
+        echo '</section></section>';
     }
 }

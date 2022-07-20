@@ -10,7 +10,7 @@ body {
     justify-content: center;
     background-color: silver;
     background-image: url("../imgs/pattern.png");
-    gap: 25px;
+    gap: 50px;
     margin: 8px;
 }
 
@@ -23,13 +23,14 @@ body {
 
 #site-title {
     font-family: var(--title-font);
+    font-size: 225%;
 }
 
 #site-version {
     font-style: italic;
 }
 
-#content {
+#main {
     display: flex;
     justify-content: center;
     min-width: 466px;
@@ -129,5 +130,23 @@ input[type=number] { /* for Mozilla */
 }
 
 a {
-    color: #111111;
+    color: #333333;
+}
+
+a:hover {
+    color: black;
+}
+
+#notification {
+    display: none;
+    background-color: #ffffffee;
+    position: fixed;
+    width: 30vw;
+    height: 30vh;
+	top: calc(50vh - 15vh);
+	left: calc(50vw - 15vw);
+	box-shadow: 0 0 40px black;
+    box-sizing: border-box;
+    padding: 2vh 2vw;
+	z-index: 99;
 }
