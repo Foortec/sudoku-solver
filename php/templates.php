@@ -19,34 +19,44 @@ class Templates
             <link rel="preconnect" href="https://fonts.googleapis.com">
             <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
             <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet"> 
         ';
     }
 
     static public function getHeader() : void
     {
         echo '
-            <header>
-                <h1>Sudoku solver</h1>
+            <header id="site-header">
+                <h1 id="site-title">Sudoku solver</h1>
+                <p id="site-version">0.1.0 test version</p>
             </header>
         ';
     }
 
     static public function getSudoku() : void
     {
-        $sudoku = new Sudoku();
+        Sudoku::display();
+    }
+
+    static public function getButtons() : void
+    {
+        echo '
+            <section id="buttons">
+                <input id="solve" type="button" value="Solve"/>
+                <input id="erase" type="button" value="Erase"/>
+            </section>
+        ';
     }
 
     static public function getFooter() : void
     {
         echo '
-            <footer>
-                <h4>https://github.com/Foortec</h4>
+            <footer id="site-footer">
+                <span>
+                    &copy; 2022
+                    <a href="https://github.com/Foortec/sudoku-solver" target="_blank">github.com/Foortec/sudoku-solver</a>
+                </span>
             </footer>
         ';
-    }
-
-    static public function test() : void
-    {
-        echo "test";
     }
 }

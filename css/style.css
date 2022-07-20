@@ -1,7 +1,133 @@
 :root {
-    --main-font: 'Indie Flower', cursive;
+    --title-font: 'Indie Flower', cursive;
+    --main-font: 'Mali', cursive;
 }
 
 body {
     font-family: var(--main-font);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: silver;
+    background-image: url("../imgs/pattern.png");
+    gap: 25px;
+    margin: 8px;
+}
+
+#site-header {
+    display: flex;
+    justify-content: center;
+    background-color: white;
+    box-shadow: 0 0 10px black;
+}
+
+#site-title {
+    font-family: var(--title-font);
+}
+
+#site-version {
+    font-style: italic;
+}
+
+#content {
+    display: flex;
+    justify-content: center;
+    min-width: 466px;
+}
+
+#sudoku {
+    border: 2px solid black;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    width: 466px;
+    height: 466px;
+    box-shadow: 0 0 15px black;
+    outline: 5px solid white;
+}
+
+.sudoku-chunk {
+    border: 2px solid black;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+    width: 154px;
+    height: 154px;
+    gap: 0;
+}
+
+.sudoku-input {
+    font-family: var(--title-font);
+    font-size: 200%;
+    border: 1px solid black;
+    padding: 10px;
+    box-sizing: border-box;
+    width: 50px;
+    height: 50px;
+}
+
+input:focus-visible {
+    outline: 0;
+}
+
+/* reference to style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
+input[type=number]::-webkit-inner-spin-button { /* for Chrome */
+    -webkit-appearance: none;
+}
+
+/* reference to style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
+input[type=number] { /* for Mozilla */
+    -moz-appearance: textfield;
+    appearance: textfield;
+    margin: 0; 
+}
+
+#buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+}
+
+#solve, #erase {
+    font-family: var(--main-font);
+    font-weight: bold;
+    font-size: 150%;
+    cursor: pointer;
+    letter-spacing: 3px;
+    padding: 15px;
+    box-shadow: 0 0 5px black;
+    border: none;
+    border-radius: 10px;
+    background-color: #ffffffde;
+    transition: all .3s;
+}
+
+#solve:hover, #erase:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 10px black;
+    color: white;
+    transition: all .5s;
+}
+
+#solve:hover {
+    background-color: #008040de;
+}
+
+#erase:hover {
+    background-color: #800000de;
+}
+
+#site-footer {
+    position: fixed;
+    bottom: 8px;
+    background-color: white;
+    box-shadow: 0 0 10px black;
+    width: calc(100% - 16px);
+    padding: 7px;
+    text-align: center;
+    box-sizing: border-box;
+}
+
+a {
+    color: #111111;
 }

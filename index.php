@@ -21,9 +21,14 @@
         <script src="js/ajax.js" type="text/javascript"></script>
     </head>
     <body>
-        <?php
-            templates::getHeader();
-            templates::getSudoku();
+        <?php templates::getHeader(); ?>
+        
+        <section id="content">
+            <?php templates::getSudoku(); ?>
+        </section>
+
+        <?php 
+            templates::getButtons();
             templates::getFooter();
         ?>
     </body>
