@@ -1,7 +1,7 @@
 function eraseSudoku()
 {
     const inputsList = document.getElementsByClassName("sudoku-input");
-    const inputs = Array.prototype.slice.call(inputsList); // reference: https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
+    const inputs = htmlCollectionToArray(inputsList);
 
     inputs.forEach(element => {
         element.value = null;
@@ -24,6 +24,11 @@ function loadingAnimation(start)
     {
         document.getElementById("loading").style.display = "none";
     }
+}
+
+function htmlCollectionToArray(htmlcollection)
+{
+    return Array.prototype.slice.call(htmlcollection); // reference: https://stackoverflow.com/questions/222841/most-efficient-way-to-convert-an-htmlcollection-to-an-array
 }
 
 function solveSudoku()
@@ -56,7 +61,7 @@ function solveSudoku()
     };
 
     const inputsList = document.getElementsByClassName("sudoku-input");
-    const inputs = Array.prototype.slice.call(inputsList);
+    const inputs = htmlCollectionToArray(inputsList);
 
     let inputsValues = [];
 
