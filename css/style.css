@@ -150,3 +150,23 @@ a:hover {
     padding: 2vh 2vw;
 	z-index: 99;
 }
+
+@keyframes loadingRotate {
+    from {transform: rotate(0deg)}
+    to {transform: rotate(360deg)}
+}
+
+#loading {
+    display: none;
+    position: fixed;
+    width: 100px;
+    height: 100px;
+	top: calc(50vh - 50px);
+	left: calc(50vw - 50px);
+    box-sizing: border-box;
+	z-index: 99;
+    animation-name: loadingRotate;
+    animation-duration: 1s;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}

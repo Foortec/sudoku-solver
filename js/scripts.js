@@ -14,29 +14,44 @@ function notify(message)
     document.getElementById("notification").style.display = "block";
 }
 
+function loadingAnimation(start)
+{
+    if(start)
+    {
+        document.getElementById("loading").style.display = "block";
+    }
+    else
+    {
+        document.getElementById("loading").style.display = "none";
+    }
+}
+
 function solveSudoku()
 {
-    // maybe some loading animation
+    loadingAnimation(true);
+
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()
     {
         if(this.status != 200 && this.status != 0)
         {
+            loadingAnimation(false);
             notify("Something went wrong. Please try again soon.");
             return;
         }
 
         if(this.responseText == "bad input")
         {
+            loadingAnimation(false);
             notify("We can't solve that sudoku. Please check if everything is correct, then try again.");
             return;
         }
 
         if(this.readyState == 4 && this.status == 200)
         {
-            // let solution = JSON.parse(this.responseText);
-            let solution = this.responseText;
-            // console.log(solution);
+            loadingAnimation(false);
+            let solution = JSON.parse(this.responseText);
+            console.log(solution);
         }
     };
 
@@ -49,9 +64,7 @@ function solveSudoku()
         inputsValues[index] = inputs[index].value;
     }
 
-    const json = JSON.stringify(inputsValues);
-
     xmlhttp.open("POST", "php/solve.php", true);
-    xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-    xmlhttp.send(json);
+    xmlhttp.setRequestHeader("Content-Type", "application/json");
+    xmlhttp.send(JSON.stringify(inputsValues));
 }

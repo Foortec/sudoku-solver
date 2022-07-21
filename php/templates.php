@@ -28,7 +28,7 @@ class Templates
         echo '
             <header id="site-header">
                 <h1 id="site-title">Sudoku solver</h1>
-                <p id="site-version">0.2.0 test version</p>
+                <p id="site-version">0.2.1 test version</p>
             </header>
         ';
     }
@@ -52,10 +52,19 @@ class Templates
     {
         echo '
             <div id="notification">
-                <span style="float: right; padding: 10px; cursor: pointer;" onclick="document.getElementById(\'notification\').style.display = \'none\';">Close</span>
+                <span style="float: right; padding: 15px; cursor: pointer;" onclick="document.getElementById(\'notification\').style.display = \'none\';">Close</span>
                 <h3>Notification</h3>
                 <hr/>
                 <p id="notification-message"></p>
+            </div>
+        ';
+    }
+
+    static public function getLoadingAnimation() : void
+    {
+        echo '
+            <div id="loading">
+                <img style="width: 100%;" src="imgs/loading.png" alt="loading..."/>
             </div>
         ';
     }

@@ -27,6 +27,7 @@
             templates::getButtons();
             templates::getFooter();
             templates::getNotificationWindow();
+            templates::getLoadingAnimation();
         ?>
     </body>
 </html>
