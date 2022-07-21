@@ -1,7 +1,7 @@
 <?php // requires
     try
     {
-        require_once "php/templatesX.php";
+        require_once "php/templates.php";
         require_once "php/classes.php";
     }
     catch(Throwable $t)
