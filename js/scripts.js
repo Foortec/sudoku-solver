@@ -56,7 +56,10 @@ function solveSudoku()
         {
             loadingAnimation(false);
             let solution = JSON.parse(this.responseText);
-            console.log(solution);
+            
+            for(let index = 0; index < inputs.length; index++) {
+                inputs[index].value = solution[index];
+            }
         }
     };
 
