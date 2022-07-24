@@ -15,8 +15,7 @@ $sudokuKeys = array_keys($sudoku);
 $loopSafetyLimit = 1;
 $loopIterator = 0;
 
-echo json_encode($sudoku);
-return;
+$log = fopen("solve-log", "a"); // tests
 
 do
 {
@@ -26,51 +25,78 @@ do
 
         for($j=0; $j<81; ++$j) // set to NULL every "forbidden" sudoku slot, forbidden = the one we can't put the number in for sure
         {
-            if($keys[$j] == NULL) // if the slot is already NULL there is no need to do anything
+            if($keys[$j] == "") // if the slot is already NULL there is no need to do anything
+            {
+                fwrite($log, "IS NULL".PHP_EOL); // tests
                 continue;
-    
+            }
+
             if($sudoku[$j] == $i) // if we got the number, clear the whole square it is in, as well as a collumn an a row
             {
-                for($k=0; $k<9; $k+=9) // we need to determine which square to wipe out
+                fwrite($log, "THE NUMBER".PHP_EOL); // tests
+                for($k=0; $k<=72; $k+=9) // we need to determine which square to wipe out
                 {
                     if($j >= $k && $j <= $k+8)
                     {
-                        for($l=$k; $l<9; ++$l)
+                        for($l=$k; $l<$k+9; ++$l)
                             $keys[$l] = NULL;
                     }
                 }
 
-                for($k=0; $k<9; $k+=3) // we need to determine which row to wipe out
+                for($k=0; $k<=54; $k+=27) // we need to determine which row to wipe out
                 {
-                    if(($j >= $k && $j <= $k+2) || ($j >= $k+9 && $j <= $k+11) || ($j >= $k+18 && $j <= $k+20))
+                    for($l=$k; $l<=$k+6; $l+=3)
                     {
-                        for($l=$k; $l<3; $l+=9)
-                            for($m=$l; $m<3; ++$m)
-                                $keys[$m] = NULL;
+                        if(($j >= $l && $j <= $l+2) || ($j >= $l+9 && $j <= $l+11) || ($j >= $l+18 && $j <= $l+20))
+                        {
+                            for($m=$l; $m<=$l+18; $m+=9)
+                                for($n=$m; $n<$m+3; ++$n)
+                                    $keys[$n] = NULL;
+                        }
                     }
                 }
 
-                for($k=0; $k<9; ++$k) // we need to determine which column to wipe out
+                for($k=0; $k<=18; $k+=9) // we need to determine which column to wipe out
                 {
-                    if(($j >= $k && $j <= $k+6) || ($j >= $k+27 && $j <= $k+33) || ($j >= $k+54 && $j <= $k+60))
+                    for($l=$k; $l<=$k+2; ++$l)
                     {
-                        for($l=$k; $l<3; $l+=27)
-                            for($m=$l; $m<9; $m+=3)
-                                $keys[$m] = NULL;
+                        if(($j == $l || $j == $l+3 || $j == $l+6) || ($j == $l+27 || $j == $l+30 || $j == $l+33) || ($j == $l+54 || $j == $l+57 || $j == $l+60))
+                        {
+                            for($m=$l; $m<=$l+54; $m+=27)
+                                for($n=$m; $n<$m+7; $n+=3)
+                                    $keys[$n] = NULL;
+                        }
                     }
                 }
+
+                ob_start();
+                echo "(".$i.": ";
+                var_dump($keys, $j);
+                echo ")";
+                $dump = ob_get_flush();
+                fwrite($log, $dump.PHP_EOL); // tests
 
                 continue;
             }
 
-            if($sudoku[$j] != "") // if anything is here, we can't use it as well
+            if($sudoku[$j] !== "") // if anything is here, we can't use it as well
+            {
+                fwrite($log, "ANY NUMBER".PHP_EOL); // tests
                 $keys[$j] = NULL;
+            }
+
+            ob_start();
+            echo "(".$i.": ";
+            var_dump($keys, $j);
+            echo ")";
+            $dump = ob_get_flush();
+            fwrite($log, $dump.PHP_EOL); // tests
         }
 
         $oneSlot = [];
         $slotKey = [];
 
-        for($j=0; $j<9; $j+=9) // check if there is exactly one slot per square left
+        for($j=0; $j<9; $j+=9) // check if there is exactly one slot per square left - BUGGED
         {
             for($k=$j; $k<9; ++$k)
             {
@@ -88,7 +114,7 @@ do
             }
         }
 
-        for($j=0; $j<9; $j+=9) // put the number into the right fields
+        for($j=0; $j<9; $j+=9) // put the number into the right fields - PROBABLY BUGGED
         {
             for($k=$j; $k<9; ++$k)
             {
@@ -103,8 +129,13 @@ do
 
     if(!in_array("", $sudoku))
         $solved = true;
-
+ 
     $loopIterator++;
-}while(!$solved || $loopSafetyLimit<$loopIterator);
+    if($loopIterator >= $loopSafetyLimit)
+        break;
+
+}while(!$solved);
+
+fclose($log); // tests
 
 echo json_encode($sudoku);
