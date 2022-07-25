@@ -12,10 +12,9 @@ $sudoku = json_decode($input, true);
 $solved = false;
 
 $sudokuKeys = array_keys($sudoku);
-$loopSafetyLimit = 1;
+$loopSafetyLimit = 1000;
 $loopIterator = 0;
 
-$log = fopen("solve-log", "a"); // tests
 
 do
 {
@@ -27,13 +26,11 @@ do
         {
             if($keys[$j] == "") // if the slot is already NULL there is no need to do anything
             {
-                fwrite($log, "IS NULL".PHP_EOL); // tests
                 continue;
             }
 
             if($sudoku[$j] == $i) // if we got the number, clear the whole square it is in, as well as a collumn an a row
             {
-                fwrite($log, "THE NUMBER".PHP_EOL); // tests
                 for($k=0; $k<=72; $k+=9) // we need to determine which square to wipe out
                 {
                     if($j >= $k && $j <= $k+8)
@@ -68,37 +65,21 @@ do
                         }
                     }
                 }
-
-                ob_start();
-                echo "(".$i.": ";
-                var_dump($keys, $j);
-                echo ")";
-                $dump = ob_get_flush();
-                fwrite($log, $dump.PHP_EOL); // tests
-
                 continue;
             }
 
             if($sudoku[$j] !== "") // if anything is here, we can't use it as well
             {
-                fwrite($log, "ANY NUMBER".PHP_EOL); // tests
                 $keys[$j] = NULL;
             }
-
-            ob_start();
-            echo "(".$i.": ";
-            var_dump($keys, $j);
-            echo ")";
-            $dump = ob_get_flush();
-            fwrite($log, $dump.PHP_EOL); // tests
         }
 
         $oneSlot = [];
         $slotKey = [];
 
-        for($j=0; $j<9; $j+=9) // check if there is exactly one slot per square left - BUGGED
+        for($j=0; $j<=72; $j+=9) // check if there is exactly one slot per square left
         {
-            for($k=$j; $k<9; ++$k)
+            for($k=$j; $k<$j+9; ++$k)
             {
                 if($keys[$k] != NULL)
                 {
@@ -114,9 +95,9 @@ do
             }
         }
 
-        for($j=0; $j<9; $j+=9) // put the number into the right fields - PROBABLY BUGGED
+        for($j=0; $j<=72; $j+=9) // put the number into the right fields
         {
-            for($k=$j; $k<9; ++$k)
+            for($k=$j; $k<$j+9; ++$k)
             {
                 if($oneSlot[$j])
                 {
@@ -135,7 +116,5 @@ do
         break;
 
 }while(!$solved);
-
-fclose($log); // tests
 
 echo json_encode($sudoku);
