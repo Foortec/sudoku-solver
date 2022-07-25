@@ -12,9 +12,10 @@ $sudoku = json_decode($input, true);
 $solved = false;
 
 $sudokuKeys = array_keys($sudoku);
-$loopSafetyLimit = 1000;
+$loopSafetyLimit = 500;
 $loopIterator = 0;
 
+// $log = fopen("solve-log", "a"); // debug
 
 do
 {
@@ -74,6 +75,13 @@ do
             }
         }
 
+        // if($i == 4)
+        // {
+        //     ob_start(); // debug
+        //     echo "(".$i.": "; // debug
+        //     var_dump($keys); // debug
+        // }
+
         $oneSlot = [];
         $slotKey = [];
 
@@ -81,7 +89,7 @@ do
         {
             for($k=$j; $k<$j+9; ++$k)
             {
-                if($keys[$k] != NULL)
+                if($keys[$k] !== NULL)
                 {
                     if($oneSlot[$j])
                     {
@@ -94,6 +102,14 @@ do
                 }
             }
         }
+
+        // if($i == 4)
+        // {
+        //     var_dump($oneSlot, $slotKey); // debug
+        //     echo ")"; // debug
+        //     $dump = ob_get_flush(); // debug
+        //     fwrite($log, $dump.PHP_EOL); // debug
+        // }
 
         for($j=0; $j<=72; $j+=9) // put the number into the right fields
         {
@@ -116,5 +132,7 @@ do
         break;
 
 }while(!$solved);
+
+// fclose($log); // debug
 
 echo json_encode($sudoku);
