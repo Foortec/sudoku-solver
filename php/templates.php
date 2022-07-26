@@ -28,7 +28,7 @@ class Templates
         echo '
             <header id="site-header">
                 <h1 id="site-title">Sudoku solver</h1>
-                <p id="site-version">0.3.5 test version</p>
+                <p id="site-version">0.3.6 test version</p>
             </header>
         ';
     }

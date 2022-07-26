@@ -11,11 +11,14 @@ if($input == false || $input == "")
 $sudoku = json_decode($input, true);
 
 $sudokuEmpty = true;
+$sudokuFull = true;
 
 for($i=0; $i<81; ++$i)
 {
     if($sudoku[$i] != "")
         $sudokuEmpty = false;
+    else
+        $sudokuFull = false;
 }
 
 if($sudokuEmpty)
@@ -23,17 +26,6 @@ if($sudokuEmpty)
     echo "bad input";
     header("HTTP/1.1 400 Bad Request");
     return;
-}
-
-// if sudoku is incorrect (against the rules) → echo "bad input" and return
-
-// if sudoku has no empty inputs → set solved = true, echo json output and return
-$sudokuFull = true;
-
-for($i=0; $i<81; ++$i)
-{
-    if($sudoku[$i] == "")
-        $sudokuFull = false;
 }
 
 if($sudokuFull)
