@@ -38,17 +38,24 @@ function solveSudoku()
     let xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function()
     {
+        if(this.status == 204)
+        {
+            loadingAnimation(false);
+            notify("The sudoku is already full.");
+            return;
+        }
+
+        if((this.status == 400 && this.responseText == "bad input") || this.responseText == "bad input")
+        {
+            loadingAnimation(false);
+            notify("We can't solve that sudoku. Please check if everything is correct, then try again.");
+            return;
+        }
+
         if(this.status != 200 && this.status != 0)
         {
             loadingAnimation(false);
             notify("Something went wrong. Please try again soon.");
-            return;
-        }
-
-        if(this.responseText == "bad input")
-        {
-            loadingAnimation(false);
-            notify("We can't solve that sudoku. Please check if everything is correct, then try again.");
             return;
         }
 

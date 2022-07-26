@@ -9,7 +9,7 @@ class Templates
             <meta name="keywords" content="sudoku, solver, 9x9">
             <meta name="author" content="Piotr Czajka">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <meta name="theme-color" content="#808080">
+            <meta name="theme-color" content="#eeeeee">
         ';
     }
 
@@ -28,7 +28,7 @@ class Templates
         echo '
             <header id="site-header">
                 <h1 id="site-title">Sudoku solver</h1>
-                <p id="site-version">0.3.4 test version</p>
+                <p id="site-version">0.3.5 test version</p>
             </header>
         ';
     }
