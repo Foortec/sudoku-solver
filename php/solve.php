@@ -9,6 +9,7 @@ if($input == false || $input == "")
 }
 
 $sudoku = json_decode($input, true);
+unset($input);
 
 $sudokuEmpty = true;
 $sudokuFull = true;
@@ -33,6 +34,7 @@ if($sudokuFull)
     header("HTTP/1.1 204 No Content");
     return;
 }
+unset($sudokuFull, $sudokuEmpty);
 
 $solved = false;
 
