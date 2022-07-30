@@ -36,13 +36,10 @@ if($sudokuFull)
 }
 unset($sudokuFull, $sudokuEmpty);
 
-$sudokuKeys = array_keys($sudoku);
 $againstTheRules = false;
 
 for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
 {
-    $keys = $sudokuKeys;
-
     for($j=0; $j<81; ++$j) // go thru all fields
     {
         if($sudoku[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
@@ -54,7 +51,7 @@ for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
                     $numRepetition = 0;
                     for($l=$k; $l<$k+9; ++$l)
                     {
-                        if($l == $i)
+                        if($sudoku[$l] == $i)
                             $numRepetition++;
                     }
                     if($numRepetition >= 2)
@@ -78,7 +75,7 @@ for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
                         {
                             for($n=$m; $n<$m+3; ++$n)
                             {
-                                if($n == $i)
+                                if($sudoku[$n] == $i)
                                     $numRepetition++;
                             }
                         }
@@ -104,7 +101,7 @@ for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
                         {
                             for($n=$m; $n<$m+7; $n+=3)
                             {
-                                if($n == $i)
+                                if($sudoku[$n] == $i)
                                     $numRepetition++;
                             }
                         }
@@ -132,6 +129,7 @@ if($againstTheRules)
 }
 unset($againstTheRules, $numRepetition);
 
+$sudokuKeys = array_keys($sudoku);
 $solved = false;
 
 do
