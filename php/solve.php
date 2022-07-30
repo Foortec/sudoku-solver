@@ -36,9 +36,103 @@ if($sudokuFull)
 }
 unset($sudokuFull, $sudokuEmpty);
 
-$solved = false;
-
 $sudokuKeys = array_keys($sudoku);
+$againstTheRules = false;
+
+for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
+{
+    $keys = $sudokuKeys;
+
+    for($j=0; $j<81; ++$j) // go thru all fields
+    {
+        if($sudoku[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
+        {
+            for($k=0; $k<=72; $k+=9) // we need to determine which square to check
+            {
+                if($j >= $k && $j <= $k+8)
+                {
+                    $numRepetition = 0;
+                    for($l=$k; $l<$k+9; ++$l)
+                    {
+                        if($l == $i)
+                            $numRepetition++;
+                    }
+                    if($numRepetition >= 2)
+                    {
+                        $againstTheRules = true;
+                        break;
+                    }
+                }
+            }
+            if($againstTheRules)
+                break;
+
+            for($k=0; $k<=54; $k+=27) // we need to determine which row to check
+            {
+                for($l=$k; $l<=$k+6; $l+=3)
+                {
+                    if(($j >= $l && $j <= $l+2) || ($j >= $l+9 && $j <= $l+11) || ($j >= $l+18 && $j <= $l+20))
+                    {
+                        $numRepetition = 0;
+                        for($m=$l; $m<=$l+18; $m+=9)
+                        {
+                            for($n=$m; $n<$m+3; ++$n)
+                            {
+                                if($n == $i)
+                                    $numRepetition++;
+                            }
+                        }
+                        if($numRepetition >= 2)
+                        {
+                            $againstTheRules = true;
+                            break;
+                        }
+                    }
+                }
+            }
+            if($againstTheRules)
+                break;
+
+            for($k=0; $k<=18; $k+=9) // we need to determine which column to check
+            {
+                for($l=$k; $l<=$k+2; ++$l)
+                {
+                    if(($j == $l || $j == $l+3 || $j == $l+6) || ($j == $l+27 || $j == $l+30 || $j == $l+33) || ($j == $l+54 || $j == $l+57 || $j == $l+60))
+                    {
+                        $numRepetition = 0;
+                        for($m=$l; $m<=$l+54; $m+=27)
+                        {
+                            for($n=$m; $n<$m+7; $n+=3)
+                            {
+                                if($n == $i)
+                                    $numRepetition++;
+                            }
+                        }
+                        if($numRepetition >= 2)
+                        {
+                            $againstTheRules = true;
+                            break;
+                        }
+                    }
+                }
+                if($againstTheRules)
+                    break;
+            }
+        }
+    }
+    if($againstTheRules)
+        break;
+}
+
+if($againstTheRules)
+{
+    echo "bad input";
+    header("HTTP/1.1 400 Bad Request");
+    return;
+}
+unset($againstTheRules, $numRepetition);
+
+$solved = false;
 
 do
 {
@@ -55,7 +149,7 @@ do
                 continue;
             }
 
-            if($sudoku[$j] == $i) // if we got the number, clear the whole square it is in, as well as a collumn an a row
+            if($sudoku[$j] == $i) // if we got the number, clear the whole square it is in, as well as a collumn and a row
             {
                 for($k=0; $k<=72; $k+=9) // we need to determine which square to wipe out
                 {
