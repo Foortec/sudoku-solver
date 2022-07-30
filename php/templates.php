@@ -1,7 +1,7 @@
 <?php
 class Templates
 {
-    static public function getMetadata() : void
+    static public function getHeadContents() : void
     {
         echo '
             <meta charset="UTF-8">
@@ -10,6 +10,8 @@ class Templates
             <meta name="author" content="Piotr Czajka">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <meta name="theme-color" content="#eeeeee">
+            <link rel="icon" type="image/x-icon" href="imgs/favicon.ico">
+            <script src="js/scripts.js" type="text/javascript"></script>
         ';
     }
 
@@ -28,7 +30,7 @@ class Templates
         echo '
             <header id="site-header">
                 <h1 id="site-title">Sudoku solver</h1>
-                <p id="site-version">0.4.1 test version</p>
+                <p id="site-version">0.4.2 test version</p>
             </header>
         ';
     }
@@ -64,12 +66,12 @@ class Templates
     {
         echo '
             <div id="loading">
-                <img style="width: 100%;" src="imgs/loading.png" alt="loading..."/>
+                <img id="loading-image" src="imgs/loading.png" alt="loading..."/>
             </div>
         ';
     }
 
-    static public function getFooter() : void
+    static public function getCopyright() : void
     {
         echo '
             <footer id="site-footer">

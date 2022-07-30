@@ -17,18 +17,17 @@
     <head>
         <title>Sudoku Solver</title>
         <?php
-            templates::getMetadata();
+            templates::getHeadContents();
             templates::getFonts();
         ?>
         <link rel="stylesheet" href="css/style.css">
-        <script src="js/scripts.js" type="text/javascript"></script>
     </head>
     <body>
         <?php 
             templates::getHeader();
             templates::getSudoku();
             templates::getButtons();
-            templates::getFooter();
+            templates::getCopyright();
             templates::getNotificationWindow();
             templates::getLoadingAnimation();
         ?>

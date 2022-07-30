@@ -119,10 +119,8 @@ input[type=number] { /* for Mozilla */
 }
 
 #site-footer {
-    position: fixed;
-    bottom: 8px;
-    background-color: white;
-    box-shadow: 0 0 10px black;
+    color: #333333;
+    font-weight: bold;
     width: calc(100% - 16px);
     padding: 7px;
     text-align: center;
@@ -169,4 +167,10 @@ a:hover {
     animation-duration: 1s;
     animation-iteration-count: infinite;
     animation-timing-function: linear;
+}
+
+#loading-image {
+    user-select: none;
+    pointer-events: none;
+    width: 100%;
 }
