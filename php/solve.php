@@ -42,6 +42,12 @@ for($i=1; $i<=9; ++$i) // check if sudoku is following the rules
 {
     for($j=0; $j<81; ++$j) // go thru all fields
     {
+        if($sudoku[$j] != "" && preg_match(";[1-9];", $sudoku[$j]) === 0)
+        {
+            $againstTheRules = true;
+            break;
+        }
+
         if($sudoku[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
         {
             for($k=0; $k<=72; $k+=9) // we need to determine which square to check

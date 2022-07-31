@@ -14,6 +14,11 @@ body {
     margin: 8px;
 }
 
+::selection {
+    background: #004080d0;
+    color: white;
+}
+
 #site-header {
     display: flex;
     justify-content: center;
@@ -67,16 +72,22 @@ body {
     height: 50px;
 }
 
+.solved {
+    background-color: #008040;
+    color: white;
+    text-shadow: 0 0 10px white;
+}
+
 input:focus-visible {
     outline: 0;
 }
 
-/* reference to style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
+/* reference to the style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
 input[type=number]::-webkit-inner-spin-button { /* for Chrome */
     -webkit-appearance: none;
 }
 
-/* reference to style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
+/* reference to the style below: https://stackoverflow.com/questions/26024771/styling-an-input-type-number */
 input[type=number] { /* for Mozilla */
     -moz-appearance: textfield;
     appearance: textfield;
@@ -111,11 +122,11 @@ input[type=number] { /* for Mozilla */
 }
 
 #solve:hover {
-    background-color: #008040de;
+    background-color: #008040d0;
 }
 
 #erase:hover {
-    background-color: #800000de;
+    background-color: #800000d0;
 }
 
 #site-footer {

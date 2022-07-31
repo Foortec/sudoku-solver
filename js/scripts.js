@@ -5,6 +5,7 @@ function eraseSudoku()
 
     inputs.forEach(element => {
         element.value = null;
+        element.classList.remove("solved");
     });
 }
 
@@ -63,9 +64,15 @@ function solveSudoku()
         {
             loadingAnimation(false);
             let solution = JSON.parse(this.responseText);
+
+            console.log(solution);
             
             for(let index = 0; index < inputs.length; index++) {
                 inputs[index].value = solution[index];
+                if(typeof solution[index] != "string")
+                {
+                    inputs[index].classList.add("solved");
+                }
             }
         }
     };
