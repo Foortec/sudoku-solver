@@ -157,7 +157,7 @@ class Sudoku
                 if($againstTheRules)
                     break;
 
-                if($fields[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
+                if($this->fields[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
                 {
                     $againstTheRules = $this->numberRepeatsInSquare($j);
                     if($againstTheRules)

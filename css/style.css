@@ -73,9 +73,8 @@ body {
 }
 
 .solved {
-    background-color: #008040;
-    color: white;
-    text-shadow: 0 0 10px white;
+    background-color: #d0fce6;
+    text-shadow: 0 0 5px white;
 }
 
 input:focus-visible {
