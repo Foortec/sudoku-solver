@@ -1,6 +1,19 @@
 :root {
     --title-font: 'Indie Flower', cursive;
     --main-font: 'Mali', cursive;
+
+    --white: white;
+    --black: black;
+    --grey: #333333;
+
+    --main-bg-color: silver;
+    --selection-bg: #004080d0;
+    --selection-color: var(--white);
+    --solved-bg: #d0fce6;
+    --buttons-bg: #ffffffde;
+    --button-solve-hover-bg: #008040d0;
+    --button-erase-hover-bg: #800000d0;
+    --notification-bg: #ffffffee;
 }
 
 body {
@@ -8,22 +21,22 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: silver;
+    background-color: var(--main-bg-color);
     background-image: url("../imgs/pattern.png");
     gap: 50px;
     margin: 8px;
 }
 
 ::selection {
-    background: #004080d0;
-    color: white;
+    background: var(--selection-bg);
+    color: var(--selection-color);
 }
 
 #site-header {
     display: flex;
     justify-content: center;
-    background-color: white;
-    box-shadow: 0 0 10px black;
+    background-color: var(--white);
+    box-shadow: 0 0 10px var(--black);
 }
 
 #site-title {
@@ -42,19 +55,19 @@ body {
 }
 
 #sudoku {
-    border: 2px solid black;
+    border: 2px solid var(--black);
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     box-sizing: border-box;
     width: 466px;
     height: 466px;
-    box-shadow: 0 0 15px black;
-    outline: 5px solid white;
+    box-shadow: 0 0 15px var(--black);
+    outline: 5px solid var(--white);
 }
 
 .sudoku-chunk {
-    border: 2px solid black;
+    border: 2px solid var(--black);
     flex-wrap: wrap;
     box-sizing: border-box;
     width: 154px;
@@ -65,7 +78,7 @@ body {
 .sudoku-input {
     font-family: var(--title-font);
     font-size: 200%;
-    border: 1px solid black;
+    border: 1px solid var(--black);
     padding: 10px;
     box-sizing: border-box;
     width: 50px;
@@ -73,8 +86,8 @@ body {
 }
 
 .solved {
-    background-color: #d0fce6;
-    text-shadow: 0 0 5px white;
+    background-color: var(--solved-bg);
+    text-shadow: 0 0 5px var(--white);
 }
 
 input:focus-visible {
@@ -106,26 +119,26 @@ input[type=number] { /* for Mozilla */
     cursor: pointer;
     letter-spacing: 3px;
     padding: 15px;
-    box-shadow: 0 0 5px black;
+    box-shadow: 0 0 5px var(--black);
     border: none;
     border-radius: 10px;
-    background-color: #ffffffde;
+    background-color: var(--buttons-bg);
     transition: all .3s;
 }
 
 #solve:hover, #erase:hover {
     transform: scale(1.05);
-    box-shadow: 0 0 10px black;
-    color: white;
+    box-shadow: 0 0 10px var(--black);
+    color: var(--white);
     transition: all .5s;
 }
 
 #solve:hover {
-    background-color: #008040d0;
+    background-color: var(--button-solve-hover-bg);
 }
 
 #erase:hover {
-    background-color: #800000d0;
+    background-color: var(--button-erase-hover-bg);
 }
 
 #site-footer {
@@ -138,22 +151,22 @@ input[type=number] { /* for Mozilla */
 }
 
 a {
-    color: #333333;
+    color: var(--grey);
 }
 
 a:hover {
-    color: black;
+    color: var(--black);
 }
 
 #notification {
     display: none;
-    background-color: #ffffffee;
+    background-color: var(--notification-bg);
     position: fixed;
     width: 30vw;
     height: 30vh;
 	top: calc(50vh - 15vh);
 	left: calc(50vw - 15vw);
-	box-shadow: 0 0 40px black;
+	box-shadow: 0 0 40px var(--black);
     box-sizing: border-box;
     padding: 2vh 2vw;
 	z-index: 99;
