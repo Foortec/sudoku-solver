@@ -303,6 +303,57 @@ class Sudoku
                 break;
 
         }while(!$this->solved);
+
+        if($this->solved)
+        {
+            $this->currentHeader = "HTTP/1.1 200 OK";
+            return;
+        }
+
+        do
+        {
+            $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => null, 2 => null, 3 => null, 4 => null, 5 => null, 6 => null, 7 => null, 8 => null, 9 => null); }, $this->fields);
+            
+            for($i=0; $i<81; ++$i) // note possible numbers
+            {
+                for($j=1; $j<=9; ++$j) // check for all 1-9 numbers
+                {
+                    $possible = true;
+                    
+                    // if the num is in the square, row or column set possible = false
+
+                    if($possible)
+                        $fieldsPossible[$i][$j] = true;
+                }
+            }
+            
+            do
+            {
+                $sudokuCopy = $this->fields;
+
+                for($i=1; $i<=9; ++$i)
+                {
+                    // search for one field in the square, which has only one possible number $i, insert the number in there and erase possible $i numbers from the square, row and the column
+                    for($j=0; $j<81; ++$i)
+                    {
+
+                    }
+                }
+
+                if($this->solved)
+                {
+                    $this->currentHeader = "HTTP/1.1 200 OK";
+                    return;
+                }
+
+            }while($sudokuCopy != $this->fields);
+            
+            $sudokuCopy = $this->fields;
+
+            // do algorithm 1.0
+
+        }while($sudokuCopy != $this->fields);
+
         $this->currentHeader = "HTTP/1.1 200 OK";
     }
 
