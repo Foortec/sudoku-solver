@@ -312,7 +312,7 @@ class Sudoku
 
         do
         {
-            $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => null, 2 => null, 3 => null, 4 => null, 5 => null, 6 => null, 7 => null, 8 => null, 9 => null); }, $this->fields);
+            $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false, 6 => false, 7 => false, 8 => false, 9 => false); }, $this->fields);
             
             for($i=0; $i<81; ++$i) // note possible numbers
             {
@@ -320,7 +320,33 @@ class Sudoku
                 {
                     $possible = true;
                     
-                    // if the num is in the square, row or column set possible = false
+                    for($k=0; $k<=72; $k+=9) // if the number is in the square set possible to false
+                        if($i >= $k && $i <= $k+8)
+                            for($l=$k; $l<$k+9; ++$l)
+                                if($this->fields[$l] == $j)
+                                    $possible = false;
+                    
+                    if(!$possible) // if already not possible, no need to check further for this $j
+                        continue;
+                    
+                    for($k=0; $k<=54; $k+=27) // if the number is in the row set possible to false
+                        for($l=$k; $l<=$k+6; $l+=3)
+                            if(($i >= $l && $i <= $l+2) || ($i >= $l+9 && $i <= $l+11) || ($i >= $l+18 && $i <= $l+20))
+                                for($m=$l; $m<=$l+18; $m+=9)
+                                    for($n=$m; $n<$m+3; ++$n)
+                                        if($this->fields[$n] == $j)
+                                            $possible = false;
+                    
+                    if(!$possible) // if already not possible, no need to check further for this $j
+                        continue;
+                    
+                    for($k=0; $k<=18; $k+=9) // if the number is in the column set possible to false
+                        for($l=$k; $l<=$k+2; ++$l)
+                            if(($i == $l || $i == $l+3 || $i == $l+6) || ($i == $l+27 || $i == $l+30 || $i == $l+33) || ($i == $l+54 || $i == $l+57 || $i == $l+60))
+                                for($m=$l; $m<=$l+54; $m+=27)
+                                    for($n=$m; $n<$m+7; $n+=3)
+                                        if($this->fields[$n] == $j)
+                                            $possible = false;
 
                     if($possible)
                         $fieldsPossible[$i][$j] = true;
@@ -333,10 +359,41 @@ class Sudoku
 
                 for($i=1; $i<=9; ++$i)
                 {
-                    // search for one field in the square, which has only one possible number $i, insert the number in there and erase possible $i numbers from the square, row and the column
-                    for($j=0; $j<81; ++$i)
+                    for($j=0; $j<81; ++$j)// search for field where only possible number is $i, then insert $i in the field and erase possible $i numbers from the square, row and the column
                     {
+                        if($fieldsPossible[$j][$i] != true)
+                            continue;
+                        
+                        $possibleCounter = 0;
+                        for($k=1; $k<=9; ++$k)
+                        {
+                            if($fieldsPossible[$j][$k] == true)
+                                $possibleCounter++;
+                        }
+                        
+                        if($possibleCounter != 1)
+                            continue;
+                        
+                        $this->fields[$j] = $i;
 
+                        for($k=0; $k<=72; $k+=9) // erase possible $i from the square
+                            if($j >= $k && $j <= $k+8)
+                                for($l=$k; $l<$k+9; ++$l)
+                                    $fieldsPossible[$l][$i] = false;
+                        
+                        for($k=0; $k<=54; $k+=27) // erase possible $i from the row
+                            for($l=$k; $l<=$k+6; $l+=3)
+                                if(($j >= $l && $j <= $l+2) || ($j >= $l+9 && $j <= $l+11) || ($j >= $l+18 && $j <= $l+20))
+                                    for($m=$l; $m<=$l+18; $m+=9)
+                                        for($n=$m; $n<$m+3; ++$n)
+                                            $fieldsPossible[$n][$i] = false;
+                        
+                        for($k=0; $k<=18; $k+=9) // erase possible $i from the column
+                            for($l=$k; $l<=$k+2; ++$l)
+                                if(($j == $l || $j == $l+3 || $j == $l+6) || ($j == $l+27 || $j == $l+30 || $j == $l+33) || ($j == $l+54 || $j == $l+57 || $j == $l+60))
+                                    for($m=$l; $m<=$l+54; $m+=27)
+                                        for($n=$m; $n<$m+7; $n+=3)
+                                            $fieldsPossible[$n][$i] = false;
                     }
                 }
 
@@ -351,6 +408,41 @@ class Sudoku
             $sudokuCopy = $this->fields;
 
             // do algorithm 1.0
+            $sudokuKeys = array_keys($this->fields);
+            do
+            {
+                $sudokuCopy = $this->fields;
+
+                for($i=1; $i<=9; ++$i)
+                {
+                    $keys = $sudokuKeys;
+
+                    for($j=0; $j<81; ++$j) // set to NULL every "forbidden" sudoku field's key, forbidden = the one we can't put the number in for sure
+                    {
+                        if($keys[$j] == "") // if the slot is already NULL there is no need to do anything
+                            continue;
+
+                        if($this->fields[$j] == $i) // if we got the number, exclude the whole square it is in, as well as a collumn and a row
+                        {
+                            $this->excludeSquare($keys, $j);
+                            $this->excludeRow($keys, $j);
+                            $this->excludeColumn($keys, $j);
+                            continue;
+                        }
+
+                        if($this->fields[$j] !== "") // if anything is here, we can't use it as well
+                            $keys[$j] = NULL;
+                    }
+                    $this->fillFields($keys, $i);
+                }
+
+                if(!in_array("", $this->fields))
+                    $this->solved = true;
+
+                if(count(array_diff_assoc($sudokuCopy, $this->fields)) === 0) // if nothing changed, it means the loop will go on forever (probably sudoku is too hard)
+                    break;
+
+            }while(!$this->solved);
 
         }while($sudokuCopy != $this->fields);
 
