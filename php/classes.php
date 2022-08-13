@@ -29,10 +29,8 @@ class Sudoku
     {
         $empty = true;
         for($i=0; $i<81; ++$i)
-        {
             if($this->fields[$i] != "")
                 $empty = false;
-        }
 
         if($empty)
         {
@@ -48,10 +46,8 @@ class Sudoku
     {
         $full = true;
         for($i=0; $i<81; ++$i)
-        {
             if($this->fields[$i] == "")
                 $full = false;
-        }
 
         if($full)
         {
@@ -77,19 +73,17 @@ class Sudoku
     {
         $theNumber = $this->fields[$fieldIndex];
         for($i=0; $i<=72; $i+=9)
-        {
             if($fieldIndex >= $i && $fieldIndex <= $i+8)
             {
                 $numRepetition = 0;
                 for($j=$i; $j<$i+9; ++$j)
-                {
                     if($this->fields[$j] == $theNumber)
                         $numRepetition++;
-                }
+                
                 if($numRepetition >= 2)
                     return true;
             }
-        }
+
         return false;
     }
 
@@ -97,25 +91,19 @@ class Sudoku
     {
         $theNumber = $this->fields[$fieldIndex];
         for($i=0; $i<=54; $i+=27)
-        {
             for($j=$i; $j<=$i+6; $j+=3)
-            {
                 if(($fieldIndex >= $j && $fieldIndex <= $j+2) || ($fieldIndex >= $j+9 && $fieldIndex <= $j+11) || ($fieldIndex >= $j+18 && $fieldIndex <= $j+20))
                 {
                     $numRepetition = 0;
                     for($k=$j; $k<=$j+18; $k+=9)
-                    {
                         for($l=$k; $l<$k+3; ++$l)
-                        {
                             if($this->fields[$l] == $theNumber)
                                 $numRepetition++;
-                        }
-                    }
+                    
                     if($numRepetition >= 2)
                         return true;
                 }
-            }
-        }
+
         return false;
     }
 
@@ -123,25 +111,19 @@ class Sudoku
     {
         $theNumber = $this->fields[$fieldIndex];
         for($i=0; $i<=18; $i+=9)
-        {
             for($j=$i; $j<=$i+2; ++$j)
-            {
                 if(($fieldIndex == $j || $fieldIndex == $j+3 || $fieldIndex == $j+6) || ($fieldIndex == $j+27 || $fieldIndex == $j+30 || $fieldIndex == $j+33) || ($fieldIndex == $j+54 || $fieldIndex == $j+57 || $fieldIndex == $j+60))
                 {
                     $numRepetition = 0;
                     for($k=$j; $k<=$j+54; $k+=27)
-                    {
                         for($l=$k; $l<$k+7; $l+=3)
-                        {
                             if($this->fields[$l] == $theNumber)
                                 $numRepetition++;
-                        }
-                    }
+
                     if($numRepetition >= 2)
                         return true;
                 }
-            }
-        }
+
         return false;
     }
 
@@ -189,45 +171,29 @@ class Sudoku
     private function excludeSquare(array &$keys, int $fieldIndex) : void
     {
         for($i=0; $i<=72; $i+=9)
-        {
             if($fieldIndex >= $i && $fieldIndex <= $i+8)
-            {
                 for($j=$i; $j<$i+9; ++$j)
                     $keys[$j] = NULL;
-            }
-        }
     }
 
     private function excludeRow(array &$keys, int $fieldIndex) : void
     {
         for($i=0; $i<=54; $i+=27)
-        {
             for($j=$i; $j<=$i+6; $j+=3)
-            {
                 if(($fieldIndex >= $j && $fieldIndex <= $j+2) || ($fieldIndex >= $j+9 && $fieldIndex <= $j+11) || ($fieldIndex >= $j+18 && $fieldIndex <= $j+20))
-                {
                     for($k=$j; $k<=$j+18; $k+=9)
                         for($m=$k; $m<$k+3; ++$m)
                             $keys[$m] = NULL;
-                }
-            }
-        }
     }
 
     private function excludeColumn(array &$keys, int $fieldIndex) : void
     {
         for($i=0; $i<=18; $i+=9) // we need to determine which column to wipe out
-        {
             for($j=$i; $j<=$i+2; ++$j)
-            {
                 if(($fieldIndex == $j || $fieldIndex == $j+3 || $fieldIndex == $j+6) || ($fieldIndex == $j+27 || $fieldIndex == $j+30 || $fieldIndex == $j+33) || ($fieldIndex == $j+54 || $fieldIndex == $j+57 || $fieldIndex == $j+60))
-                {
                     for($k=$j; $k<=$j+54; $k+=27)
                         for($l=$k; $l<$k+7; $l+=3)
                             $keys[$l] = NULL;
-                }
-            }
-        }
     }
 
     private function fillFields(array $keys, int $theNumber) : void
@@ -235,9 +201,7 @@ class Sudoku
         $oneSlot = $slotKey = [];
 
         for($i=0; $i<=72; $i+=9) // check if there is exactly one slot per square left
-        {
             for($j=$i; $j<$i+9; ++$j)
-            {
                 if($keys[$j] !== NULL)
                 {
                     if($oneSlot[$i])
@@ -249,21 +213,15 @@ class Sudoku
                     $oneSlot[$i] = true;
                     $slotKey[$i] = $j;
                 }
-            }
-        }
 
         for($i=0; $i<=72; $i+=9) // put the number into the right fields
-        {
             for($j=$i; $j<$i+9; ++$j)
-            {
                 if($oneSlot[$i])
                 {
                     $this->fields[$slotKey[$i]] = $theNumber;
                     break;
                 }
-            }
-        }
-    } 
+    }
 
     public function solve() : void
     {
@@ -315,7 +273,6 @@ class Sudoku
             $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false, 6 => false, 7 => false, 8 => false, 9 => false); }, $this->fields);
             
             for($i=0; $i<81; ++$i) // note possible numbers
-            {
                 for($j=1; $j<=9; ++$j) // check for all 1-9 numbers
                 {
                     $possible = true;
@@ -351,16 +308,17 @@ class Sudoku
                     if($possible)
                         $fieldsPossible[$i][$j] = true;
                 }
-            }
             
             do
             {
                 $sudokuCopy = $this->fields;
 
                 for($i=1; $i<=9; ++$i)
-                {
                     for($j=0; $j<81; ++$j)// search for field where only possible number is $i, then insert $i in the field and erase possible $i numbers from the square, row and the column
                     {
+                        if($this->fields[$j] != "")
+                            continue;
+
                         if($fieldsPossible[$j][$i] != true)
                             continue;
                         
@@ -395,7 +353,6 @@ class Sudoku
                                         for($n=$m; $n<$m+7; $n+=3)
                                             $fieldsPossible[$n][$i] = false;
                     }
-                }
 
                 if($this->solved)
                 {
@@ -411,7 +368,7 @@ class Sudoku
             $sudokuKeys = array_keys($this->fields);
             do
             {
-                $sudokuCopy = $this->fields;
+                $copy = $this->fields;
 
                 for($i=1; $i<=9; ++$i)
                 {
@@ -439,7 +396,7 @@ class Sudoku
                 if(!in_array("", $this->fields))
                     $this->solved = true;
 
-                if(count(array_diff_assoc($sudokuCopy, $this->fields)) === 0) // if nothing changed, it means the loop will go on forever (probably sudoku is too hard)
+                if(count(array_diff_assoc($copy, $this->fields)) === 0) // if nothing changed, it means the loop will go on forever (probably sudoku is too hard)
                     break;
 
             }while(!$this->solved);
