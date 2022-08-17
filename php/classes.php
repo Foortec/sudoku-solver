@@ -7,17 +7,17 @@ class Sudoku
     public bool $error = false;
     public string $currentHeader;
 
+    const HTTP_200 = "HTTP/1.1 200 OK";
+    const HTTP_204 = "HTTP/1.1 204 No Content";
+    const HTTP_400 = "HTTP/1.1 400 Bad Request";
+
     public function __construct(string|bool $sudokuFields)
     {
-        if($sudokuFields == false || $sudokuFields == "")
-        {
-            echo "bad input";
-            $this->error = true;
-            $this->currentHeader = "HTTP/1.1 400 Bad Request";
-            return;
-        }
+        if($this->fields = json_decode($sudokuFields, true))
+        return;
 
-        $this->fields = json_decode($sudokuFields, true);
+        $this->error = true;
+        $this->currentHeader = self::HTTP_400;
     }
 
     public function getFields() : array
@@ -27,34 +27,25 @@ class Sudoku
 
     public function isEmpty() : bool
     {
-        $empty = true;
+        $fields = $this->fields;
         for($i=0; $i<81; ++$i)
-            if($this->fields[$i] != "")
-                $empty = false;
-
-        if($empty)
-        {
-            echo "bad input";
-            $this->error = true;
-            $this->currentHeader = "HTTP/1.1 400 Bad Request";
-            return true;
-        }
-        return false;
+            if(!empty($fields[$i]))
+                return false;
+ 
+        $this->error = true;
+        $this->currentHeader = self::HTTP_400;
+        return true;
     }
 
     public function isFull() : bool
     {
-        $full = true;
+        $fields = $this->fields;
         for($i=0; $i<81; ++$i)
-            if($this->fields[$i] == "")
-                $full = false;
-
-        if($full)
-        {
-            $this->currentHeader = "HTTP/1.1 204 No Content";
-            return true;
-        }
-        return false;
+            if(empty($fields[$i]))
+                return false;
+ 
+        $this->currentHeader = self::HTTP_204;
+        return true;
     }
 
     public function isSolved() : bool
@@ -72,24 +63,26 @@ class Sudoku
     private function numberRepeatsInSquare(int $fieldIndex) : bool
     {
         $theNumber = $this->fields[$fieldIndex];
+        $fields = $this->fields;
         for($i=0; $i<=72; $i+=9)
             if($fieldIndex >= $i && $fieldIndex <= $i+8)
             {
                 $numRepetition = 0;
                 for($j=$i; $j<$i+9; ++$j)
-                    if($this->fields[$j] == $theNumber)
+                    if($fields[$j] == $theNumber)
+                    {
                         $numRepetition++;
-                
-                if($numRepetition >= 2)
-                    return true;
+                        if($numRepetition >= 2)
+                            return true;
+                    }
             }
-
         return false;
     }
 
     private function numberRepeatsInRow(int $fieldIndex) : bool
     {
         $theNumber = $this->fields[$fieldIndex];
+        $fields = $this->fields;
         for($i=0; $i<=54; $i+=27)
             for($j=$i; $j<=$i+6; $j+=3)
                 if(($fieldIndex >= $j && $fieldIndex <= $j+2) || ($fieldIndex >= $j+9 && $fieldIndex <= $j+11) || ($fieldIndex >= $j+18 && $fieldIndex <= $j+20))
@@ -97,19 +90,20 @@ class Sudoku
                     $numRepetition = 0;
                     for($k=$j; $k<=$j+18; $k+=9)
                         for($l=$k; $l<$k+3; ++$l)
-                            if($this->fields[$l] == $theNumber)
+                            if($fields[$l] == $theNumber)
+                            {
                                 $numRepetition++;
-                    
-                    if($numRepetition >= 2)
-                        return true;
+                                if($numRepetition >= 2)
+                                    return true;
+                            }
                 }
-
         return false;
     }
 
     private function numberRepeatsInColumn(int $fieldIndex) : bool
     {
         $theNumber = $this->fields[$fieldIndex];
+        $fields = $this->fields;
         for($i=0; $i<=18; $i+=9)
             for($j=$i; $j<=$i+2; ++$j)
                 if(($fieldIndex == $j || $fieldIndex == $j+3 || $fieldIndex == $j+6) || ($fieldIndex == $j+27 || $fieldIndex == $j+30 || $fieldIndex == $j+33) || ($fieldIndex == $j+54 || $fieldIndex == $j+57 || $fieldIndex == $j+60))
@@ -117,52 +111,59 @@ class Sudoku
                     $numRepetition = 0;
                     for($k=$j; $k<=$j+54; $k+=27)
                         for($l=$k; $l<$k+7; $l+=3)
-                            if($this->fields[$l] == $theNumber)
+                            if($fields[$l] == $theNumber)
+                            {
                                 $numRepetition++;
-
-                    if($numRepetition >= 2)
-                        return true;
+                                if($numRepetition >= 2)
+                                    return true;
+                            }
                 }
-
         return false;
     }
 
     public function againstTheRules() : bool
     {
-        $againstTheRules = false;
-
+        $fields = $this->fields;
         for($i=1; $i<=9; ++$i)
         {
+            $breaked = false;
             for($j=0; $j<81; ++$j) // go thru all fields
             {
-                $againstTheRules = $this->hasWrongValue($j);
-                if($againstTheRules)
-                    break;
-
-                if($this->fields[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
+                if($this->hasWrongValue($j))
                 {
-                    $againstTheRules = $this->numberRepeatsInSquare($j);
-                    if($againstTheRules)
+                    $breaked = true;
+                    break;
+                }
+ 
+                if($fields[$j] == $i) // if we got the number, check for the same num in the whole square it is in, as well as a collumn and a row
+                {
+                    if($this->numberRepeatsInSquare($j))
+                    {
+                        $breaked = true;
                         break;
-
-                    $againstTheRules = $this->numberRepeatsInRow($j);
-                    if($againstTheRules)
+                    }
+ 
+                    if($this->numberRepeatsInRow($j))
+                    {
+                        $breaked = true;
                         break;
-
-                    $againstTheRules = $this->numberRepeatsInColumn($j);
-                    if($againstTheRules)
+                    }
+ 
+                    if($this->numberRepeatsInColumn($j))
+                    {
+                        $breaked = true;
                         break;
+                    }
                 }
             }
-            if($againstTheRules)
+            if($breaked)
                 break;
         }
-
-        if($againstTheRules)
+ 
+        if($breaked)
         {
-            echo "bad input";
             $this->error = true;
-            $this->currentHeader = "HTTP/1.1 400 Bad Request";
+            $this->currentHeader = self::HTTP_400;
             return true;
         }
         return false;
@@ -188,7 +189,7 @@ class Sudoku
 
     private function excludeColumn(array &$keys, int $fieldIndex) : void
     {
-        for($i=0; $i<=18; $i+=9) // we need to determine which column to wipe out
+        for($i=0; $i<=18; $i+=9)
             for($j=$i; $j<=$i+2; ++$j)
                 if(($fieldIndex == $j || $fieldIndex == $j+3 || $fieldIndex == $j+6) || ($fieldIndex == $j+27 || $fieldIndex == $j+30 || $fieldIndex == $j+33) || ($fieldIndex == $j+54 || $fieldIndex == $j+57 || $fieldIndex == $j+60))
                     for($k=$j; $k<=$j+54; $k+=27)
@@ -225,42 +226,39 @@ class Sudoku
 
     private function numberIsInTheSquare(int $fieldIndex,int $theNumber) : bool
     {
-        $inSquare = false;
+        $fields = $this->fields;
         for($i=0; $i<=72; $i+=9)
             if($fieldIndex >= $i && $fieldIndex <= $i+8)
                 for($j=$i; $j<$i+9; ++$j)
-                    if($this->fields[$j] == $theNumber)
-                    {
-                        $inSquare = true;
-                        break;
-                    }
-        return $inSquare;
+                    if($fields[$j] == $theNumber)
+                        return true;
+        return false;
     }
 
     private function numberIsInTheRow(int $fieldIndex,int $theNumber) : bool
     {
-        $inRow = false;
+        $fields = $this->fields;
         for($i=0; $i<=54; $i+=27)
             for($j=$i; $j<=$i+6; $j+=3)
                 if(($fieldIndex >= $j && $fieldIndex <= $j+2) || ($fieldIndex >= $j+9 && $fieldIndex <= $j+11) || ($fieldIndex >= $j+18 && $fieldIndex <= $j+20))
                     for($k=$j; $k<=$j+18; $k+=9)
                         for($l=$k; $l<$k+3; ++$l)
-                            if($this->fields[$l] == $theNumber)
-                                $inRow = true;
-        return $inRow;
+                            if($fields[$l] == $theNumber)
+                                return true;
+        return false;
     }
 
     private function numberIsInTheColumn(int $fieldIndex,int $theNumber) : bool
     {
-        $inColumn = false;
+        $fields = $this->fields;
         for($i=0; $i<=18; $i+=9)
             for($j=$i; $j<=$i+2; ++$j)
                 if(($fieldIndex == $j || $fieldIndex == $j+3 || $fieldIndex == $j+6) || ($fieldIndex == $j+27 || $fieldIndex == $j+30 || $fieldIndex == $j+33) || ($fieldIndex == $j+54 || $fieldIndex == $j+57 || $fieldIndex == $j+60))
                     for($k=$j; $k<=$j+54; $k+=27)
                         for($l=$k; $l<$k+7; $l+=3)
-                            if($this->fields[$l] == $theNumber)
-                                $inColumn = true;
-        return $inColumn;
+                            if($fields[$l] == $theNumber)
+                                return true;
+        return false;
     }
 
     private function erasePossibleNums(int $fieldIndex, array &$fieldsPossible) : void
@@ -289,49 +287,54 @@ class Sudoku
 
     private function exclusionAlgorithm() : void // algorithm 1.0
     {
+        $solved = $this->solved;
+        $fields = $this->fields;
         $sudokuKeys = array_keys($this->fields);
         do
         {
-            $sudokuCopy = $this->fields;
-
+            $sudokuCopy = $fields;
+ 
             for($i=1; $i<=9; ++$i)
             {
                 $keys = $sudokuKeys;
-
+ 
                 for($j=0; $j<81; ++$j) // set to NULL every "forbidden" sudoku field's key, forbidden = the one we can't put the number in for sure
                 {
                     if($keys[$j] == "") // if the slot is already NULL there is no need to do anything
                         continue;
-
-                    if($this->fields[$j] == $i) // if we got the number, exclude the whole square it is in, as well as a collumn and a row
+ 
+                    if($fields[$j] == $i) // if we got the number, exclude the whole square it is in, as well as a collumn and a row
                     {
                         $this->excludeSquare($keys, $j);
                         $this->excludeRow($keys, $j);
                         $this->excludeColumn($keys, $j);
                         continue;
                     }
-
-                    if($this->fields[$j] !== "") // if anything is here, we can't use it as well
+ 
+                    if($fields[$j] !== "") // if anything is here, we can't use it as well
                         $keys[$j] = NULL;
                 }
                 $this->fillFields($keys, $i);
             }
-
-            if(!in_array("", $this->fields))
-                $this->solved = true;
-
-            if(count(array_diff_assoc($sudokuCopy, $this->fields)) === 0) // if nothing changed, it means the loop will go on forever (probably sudoku is too hard)
+ 
+            if(!in_array("", $fields))
+                $solved = true;
+ 
+            if(count(array_diff_assoc($sudokuCopy, $fields)) === 0) // if nothing changed, it means the loop will go on forever (probably sudoku is too hard)
                 break;
-
-        }while(!$this->solved);
+ 
+        }while(!$solved);
+        $this->fields = $fields;
+        $this->solved = $solved;
     }
 
     private function possibilityAlgorithm() : void // algorithm 2.0
     {
+        $fields = $this->fields;
         do
         {
-            $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false, 6 => false, 7 => false, 8 => false, 9 => false); }, $this->fields);
-            
+            $fieldsPossible = array_map(function($field) { if($field != "") return false; else return array(1 => false, 2 => false, 3 => false, 4 => false, 5 => false, 6 => false, 7 => false, 8 => false, 9 => false); }, $fields);
+ 
             for($i=0; $i<81; ++$i) // note possible numbers
                 for($j=1; $j<=9; ++$j) // check for all numbers 1-9
                 {
@@ -339,58 +342,59 @@ class Sudoku
                         continue;
                     $fieldsPossible[$i][$j] = true;
                 }
-            
+ 
             do
             {
-                $sudokuCopy = $this->fields;
-
+                $sudokuCopy = $fields;
+ 
                 for($i=1; $i<=9; ++$i)
                     for($j=0; $j<81; ++$j)// search for field where only possible number is $i, then insert $i in the field and erase possible $i numbers from the square, row and the column
                     {
-                        if($this->fields[$j] != "" || $fieldsPossible[$j][$i] != true)
+                        if($fields[$j] != "" || $fieldsPossible[$j][$i] != true)
                             continue;
-                        
+ 
                         $possibleCounter = 0;
                         for($k=1; $k<=9; ++$k)
                         {
                             if($fieldsPossible[$j][$k] == true)
                                 $possibleCounter++;
                         }
-                        
+ 
                         if($possibleCounter != 1)
                             continue;
-                        
-                        $this->fields[$j] = $i;
+ 
+                        $fields[$j] = $i;
                         $this->erasePossibleNums($j, $fieldsPossible);
                     }
-
+ 
                 if($this->solved)
                 {
-                    $this->currentHeader = "HTTP/1.1 200 OK";
+                    $this->currentHeader = self::HTTP_200;
                     return;
                 }
-
+ 
             }while($sudokuCopy != $this->fields);
-            
-            $sudokuCopy = $this->fields;
+ 
+            $this->fields = $fields; // save changes made in fields
+            $sudokuCopy = $fields;
             $this->exclusionAlgorithm(); // algorithm 1.0, last chance
-
-        }while($sudokuCopy != $this->fields);
+ 
+        }while($sudokuCopy != $this->fields); // we need to check this->fields because exlusionAlgorithm() makes a change in it
     }
 
     public function solve() : void
     {
         $this->exclusionAlgorithm(); // algorithm 1.0
-
+ 
         if($this->solved)
         {
-            $this->currentHeader = "HTTP/1.1 200 OK";
+            $this->currentHeader = self::HTTP_200;
             return;
         }
-
+ 
         $this->possibilityAlgorithm(); // algorithm 2.0
-        
-        $this->currentHeader = "HTTP/1.1 200 OK";
+ 
+        $this->currentHeader = self::HTTP_200;
     }
 
     static public function display() : void
