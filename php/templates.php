@@ -76,7 +76,7 @@ class Templates
         echo '
             <footer id="site-footer">
                 <span>
-                    &copy; 2022
+                    &copy; 2022-' . date("Y") . '
                     <a href="https://github.com/Foortec/sudoku-solver" target="_blank">github.com/Foortec/sudoku-solver</a>
                 </span>
             </footer>
